@@ -242,33 +242,45 @@ interface ProductEditDialogProps {
 }
 
 function ProductEditDialog({ product, open, onClose, onSave }: ProductEditDialogProps) {
-  const [formData, setFormData] = useState<Partial<Product>>(
-    product || {
-      name: '',
-      nameEn: '',
-      slug: '',
-      description: '',
-      descriptionEn: '',
-      category: 'vanities',
-      basePrice: 0,
-      images: [],
-      dimensions: [{ id: 'dim-1', width: 60, height: 45, depth: 40, price: 0, sku: '' }],
-      materials: [],
-      colors: [],
-      features: [],
-      inStock: true,
-      featured: false,
-      bestSeller: false,
+  const { categories } = useProductStore();
+  const defaultFormData = {
+    name: '',
+    nameEn: '',
+    slug: '',
+    description: '',
+    descriptionEn: '',
+    category: 'cabinet',
+    basePrice: 0,
+    images: [],
+    dimensions: [{ id: 'dim-1', width: 60, height: 45, depth: 40, price: 0, sku: '' }],
+    materials: [],
+    colors: [],
+    features: [],
+    inStock: true,
+    featured: false,
+    bestSeller: false,
+  };
+  
+  const [formData, setFormData] = useState<Partial<Product>>(product || defaultFormData);
+
+  // Reset form when opening for new product or changing product
+  useState(() => {
+    if (product) {
+      setFormData(product);
+    } else if (open) {
+      setFormData(defaultFormData);
     }
-  );
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const now = new Date().toISOString();
+    const slug = formData.slug || formData.name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
     onSave({
       id: product?.id || `prod-${Date.now()}`,
       createdAt: product?.createdAt || now,
       updatedAt: now,
+      slug,
       ...formData,
     } as Product);
   };
@@ -314,14 +326,13 @@ function ProductEditDialog({ product, open, onClose, onSave }: ProductEditDialog
             <div className="space-y-2">
               <Label>Κατηγορία</Label>
               <select
-                value={formData.category || 'vanities'}
+                value={formData.category || 'cabinet'}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
               >
-                <option value="vanities">Έπιπλα Μπάνιου</option>
-                <option value="mirrors">Καθρέπτες</option>
-                <option value="cabinets">Ντουλάπια</option>
-                <option value="accessories">Αξεσουάρ</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                ))}
               </select>
             </div>
           </div>
