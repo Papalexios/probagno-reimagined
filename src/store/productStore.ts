@@ -18,6 +18,8 @@ interface ProductStore {
   addCategory: (category: Category) => void;
   updateCategory: (id: string, updates: Partial<Category>) => void;
   deleteCategory: (id: string) => void;
+  resetToInitial: () => void;
+  syncWithInitial: () => void;
 }
 
 export const useProductStore = create<ProductStore>()(
@@ -94,6 +96,36 @@ export const useProductStore = create<ProductStore>()(
         set((state) => ({
           categories: state.categories.filter((c) => c.id !== id),
         }));
+      },
+
+      resetToInitial: () => {
+        set({
+          products: initialProducts,
+          categories: initialCategories,
+        });
+      },
+
+      syncWithInitial: () => {
+        // Merge initial products with stored, keeping stored changes but adding any new products
+        set((state) => {
+          const storedIds = new Set(state.products.map(p => p.id));
+          const newProducts = initialProducts.filter(p => !storedIds.has(p.id));
+          
+          // Also restore any products that were incorrectly modified (e.g., renamed to "Alexis")
+          const restoredProducts = state.products.map(storedProduct => {
+            const initialProduct = initialProducts.find(p => p.id === storedProduct.id);
+            // If the product exists in initial and the name was completely changed (not by admin), restore it
+            if (initialProduct && storedProduct.name !== initialProduct.name && !storedProduct.name.includes('Έπιπλο')) {
+              return initialProduct;
+            }
+            return storedProduct;
+          });
+          
+          return {
+            products: [...restoredProducts, ...newProducts],
+            categories: initialCategories,
+          };
+        });
       },
     }),
     {
