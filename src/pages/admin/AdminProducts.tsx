@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Search, Edit, Trash2, Eye, MoreVertical, Package } from 'lucide-react';
 import { useProductStore } from '@/store/productStore';
@@ -264,13 +264,13 @@ function ProductEditDialog({ product, open, onClose, onSave }: ProductEditDialog
   const [formData, setFormData] = useState<Partial<Product>>(product || defaultFormData);
 
   // Reset form when opening for new product or changing product
-  useState(() => {
+  useEffect(() => {
     if (product) {
       setFormData(product);
     } else if (open) {
       setFormData(defaultFormData);
     }
-  });
+  }, [product, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
