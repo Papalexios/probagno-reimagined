@@ -111,13 +111,11 @@ export function useProductsQuery() {
 
       if (error) {
         console.error('Error fetching products:', error);
-        // Fall back to initial products if database is empty or error
-        return initialProducts;
+        return [];
       }
 
-      // If no products in database, return initial products
       if (!data || data.length === 0) {
-        return initialProducts;
+        return [];
       }
 
       return data.map((p) => toAppProduct(p as unknown as DbProduct));
@@ -159,15 +157,11 @@ export function useProductBySlug(slug: string) {
 
       if (error) {
         console.error('Error fetching product:', error);
-        // Fall back to initial products
-        const fallbackProduct = initialProducts.find((p) => p.slug === slug);
-        return fallbackProduct || null;
+        return null;
       }
 
       if (!data) {
-        // Check initial products as fallback
-        const fallbackProduct = initialProducts.find((p) => p.slug === slug);
-        return fallbackProduct || null;
+        return null;
       }
 
       return toAppProduct(data as unknown as DbProduct);
@@ -188,11 +182,11 @@ export function useCategoriesQuery() {
 
       if (error) {
         console.error('Error fetching categories:', error);
-        return initialCategories;
+        return [];
       }
 
       if (!data || data.length === 0) {
-        return initialCategories;
+        return [];
       }
 
       return data.map((c) => toAppCategory(c as unknown as DbCategory));

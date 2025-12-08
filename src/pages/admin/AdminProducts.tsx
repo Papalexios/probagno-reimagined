@@ -337,7 +337,7 @@ function ProductEditDialog({ product, categories, open, onClose, onSave, isLoadi
     
     // Ensure all required fields are present
     const completeProduct: Product = {
-      id: product?.id || `prod-${Date.now()}`,
+      id: product?.id || crypto.randomUUID(),
       name: formData.name || '',
       nameEn: formData.nameEn || '',
       slug,
