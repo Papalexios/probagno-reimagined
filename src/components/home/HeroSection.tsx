@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Award, Truck, Shield, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 import heroBathroom from '@/assets/hero-bathroom.jpg';
 import { useRef } from 'react';
 
@@ -11,15 +12,20 @@ export function HeroSection() {
     target: containerRef,
     offset: ["start start", "end start"]
   });
+  const { language, t } = useLanguage();
 
   const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const features = [
+  const features = language === 'el' ? [
     { icon: Award, title: '50+ Χρόνια', subtitle: 'Εμπειρίας' },
     { icon: Truck, title: 'Δωρεάν', subtitle: 'Παράδοση' },
     { icon: Shield, title: '5 Χρόνια', subtitle: 'Εγγύηση' },
+  ] : [
+    { icon: Award, title: '50+ Years', subtitle: 'Experience' },
+    { icon: Truck, title: 'Free', subtitle: 'Delivery' },
+    { icon: Shield, title: '5 Years', subtitle: 'Warranty' },
   ];
 
   return (
@@ -55,7 +61,7 @@ export function HeroSection() {
             >
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-xs sm:text-sm font-medium tracking-wide text-primary">
-                Εδώ και 50 χρόνια
+                {language === 'el' ? 'Εδώ και 50 χρόνια' : 'For 50 years'}
               </span>
             </motion.div>
             
@@ -65,11 +71,23 @@ export function HeroSection() {
               transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-6"
             >
-              Αφοσίωση στην{' '}
-              <span className="text-gradient">Λεπτομέρεια</span>,
-              <br className="hidden sm:block" />
-              <span className="sm:hidden"> </span>
-              Διαχρονική Ομορφιά
+              {language === 'el' ? (
+                <>
+                  Αφοσίωση στην{' '}
+                  <span className="text-gradient">Λεπτομέρεια</span>,
+                  <br className="hidden sm:block" />
+                  <span className="sm:hidden"> </span>
+                  Διαχρονική Ομορφιά
+                </>
+              ) : (
+                <>
+                  Dedication to{' '}
+                  <span className="text-gradient">Detail</span>,
+                  <br className="hidden sm:block" />
+                  <span className="sm:hidden"> </span>
+                  Timeless Beauty
+                </>
+              )}
             </motion.h1>
 
             <motion.p
@@ -78,8 +96,9 @@ export function HeroSection() {
               transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-base sm:text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed"
             >
-              Η εταιρεία μας, με συνεχή πορεία 50 ετών στο χώρο σχεδιασμού & κατασκευής 
-              επίπλων μπάνιου, αποτελεί συνώνυμο υψηλής ποιότητας και αισθητικής.
+              {language === 'el' 
+                ? 'Η εταιρεία μας, με συνεχή πορεία 50 ετών στο χώρο σχεδιασμού & κατασκευής επίπλων μπάνιου, αποτελεί συνώνυμο υψηλής ποιότητας και αισθητικής.'
+                : 'Our company, with a continuous journey of 50 years in bathroom furniture design & manufacturing, is synonymous with high quality and aesthetics.'}
             </motion.p>
 
             <motion.div
@@ -90,13 +109,13 @@ export function HeroSection() {
             >
               <Button size="lg" className="gap-2 group h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base rounded-xl" asChild>
                 <Link to="/products">
-                  Εξερευνήστε τα Προϊόντα
+                  {language === 'el' ? 'Εξερευνήστε τα Προϊόντα' : 'Explore Products'}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base rounded-xl bg-background/50 backdrop-blur-sm" asChild>
                 <Link to="/about">
-                  Η Ιστορία μας
+                  {language === 'el' ? 'Η Ιστορία μας' : 'Our Story'}
                 </Link>
               </Button>
             </motion.div>

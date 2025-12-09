@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-charcoal text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
@@ -13,38 +17,37 @@ export function Footer() {
               <Logo size="lg" showTagline />
             </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Με συνεχή πορεία 50 ετών στο χώρο σχεδιασμού & κατασκευής επίπλων μπάνιου, 
-              αποτελούμε συνώνυμο υψηλής ποιότητας και αισθητικής.
+              {t('footer.description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Πλοήγηση</h4>
+            <h4 className="font-display text-lg font-semibold mb-6">{t('footer.navigation')}</h4>
             <ul className="space-y-3">
               <li>
                 <Link to="/products" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Προϊόντα
+                  {t('nav.products')}
                 </Link>
               </li>
               <li>
                 <Link to="/projects" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Έργα
+                  {t('nav.projects')}
                 </Link>
               </li>
               <li>
                 <Link to="/catalog" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Κατάλογος
+                  {t('nav.catalog')}
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Η Εταιρεία
+                  {t('footer.company')}
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Επικοινωνία
+                  {t('nav.contact')}
                 </Link>
               </li>
             </ul>
@@ -52,26 +55,26 @@ export function Footer() {
 
           {/* Categories */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Κατηγορίες</h4>
+            <h4 className="font-display text-lg font-semibold mb-6">{t('footer.categories')}</h4>
             <ul className="space-y-3">
               <li>
                 <Link to="/products?category=vanities" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Έπιπλα Μπάνιου
+                  {t('category.vanities')}
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=mirrors" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Καθρέπτες
+                  {t('category.mirrors')}
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=sinks" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Νιπτήρες
+                  {t('category.sinks')}
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=cabinets" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors text-sm">
-                  Κολώνες & Ντουλάπια
+                  {t('category.cabinets')}
                 </Link>
               </li>
             </ul>
@@ -79,7 +82,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Επικοινωνία</h4>
+            <h4 className="font-display text-lg font-semibold mb-6">{t('footer.contact')}</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 mt-1 text-gold" />
@@ -103,7 +106,7 @@ export function Footer() {
               </li>
             </ul>
             
-            <div className="flex gap-4 mt-6">
+            <div className="flex items-center gap-4 mt-6">
               <a 
                 href="https://www.facebook.com/Probagno" 
                 target="_blank" 
@@ -122,20 +125,21 @@ export function Footer() {
               >
                 <Instagram className="w-5 h-5" />
               </a>
+              <LanguageSwitcher variant="footer" />
             </div>
           </div>
         </div>
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-primary-foreground/50 text-sm">
-            © {new Date().getFullYear()} PROBAGNO - STEFANOS PANOUSSOS & CO E.E. Με επιφύλαξη παντός δικαιώματος.
+            © {new Date().getFullYear()} PROBAGNO - STEFANOS PANOUSSOS & CO E.E. {t('footer.rights')}
           </p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-primary-foreground/50 hover:text-primary-foreground/70 text-sm transition-colors">
-              Πολιτική Απορρήτου
+              {t('footer.privacy')}
             </Link>
             <Link to="/terms" className="text-primary-foreground/50 hover:text-primary-foreground/70 text-sm transition-colors">
-              Όροι Χρήσης
+              {t('footer.terms')}
             </Link>
           </div>
         </div>

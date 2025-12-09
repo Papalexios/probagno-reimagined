@@ -6,15 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cartStore';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
-
-const navigation = [
-  { name: 'Αρχική', href: '/' },
-  { name: 'Προϊόντα', href: '/products' },
-  { name: 'Έργα', href: '/projects' },
-  { name: 'Κατάλογος', href: '/catalog' },
-  { name: 'Probagno', href: '/about' },
-  { name: 'Επικοινωνία', href: '/contact' },
-];
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,6 +15,16 @@ export function Header() {
   const { toggleCart, getItemCount } = useCartStore();
   const itemCount = getItemCount();
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navigation = [
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.products'), href: '/products' },
+    { name: t('nav.projects'), href: '/projects' },
+    { name: t('nav.catalog'), href: '/catalog' },
+    { name: t('nav.about'), href: '/about' },
+    { name: t('nav.contact'), href: '/contact' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,9 +75,12 @@ export function Header() {
               <span className="hidden xs:inline">210 6622215 | 210 6622218</span>
               <span className="xs:hidden">210 6622215</span>
             </a>
-            <Link to="/admin" className="hover:underline hidden sm:block font-medium">
-              Admin Dashboard
-            </Link>
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher variant="compact" />
+              <Link to="/admin" className="hover:underline hidden sm:block font-medium">
+                {t('nav.admin')}
+              </Link>
+            </div>
           </div>
         </motion.div>
 
@@ -93,7 +99,7 @@ export function Header() {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
-                    key={item.name}
+                    key={item.href}
                     to={item.href}
                     className={cn(
                       "relative px-4 py-2 text-sm font-medium transition-colors rounded-lg",
@@ -201,7 +207,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                 {/* Menu Header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
-                  <span className="font-display text-lg font-semibold">Μενού</span>
+                  <span className="font-display text-lg font-semibold">{t('nav.menu')}</span>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -212,13 +218,18 @@ export function Header() {
                   </Button>
                 </div>
 
+                {/* Language Switcher in Mobile */}
+                <div className="px-4 py-3 border-b border-border">
+                  <LanguageSwitcher />
+                </div>
+
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-4 px-2">
                   {navigation.map((item, index) => {
                     const isActive = location.pathname === item.href;
                     return (
                       <motion.div
-                        key={item.name}
+                        key={item.href}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
@@ -251,7 +262,7 @@ export function Header() {
                     className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-primary text-primary-foreground rounded-xl font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Admin Dashboard
+                    {t('nav.admin')}
                   </Link>
                   <a 
                     href="tel:+302106622215" 

@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/products/ProductCard';
 import { useProductsQuery } from '@/hooks/useProducts';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function FeaturedProducts() {
   const { data: products = [], isLoading } = useProductsQuery();
   const featuredProducts = products.filter(p => p.featured).slice(0, 6);
+  const { language, t } = useLanguage();
 
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-background relative overflow-hidden">
@@ -28,7 +30,7 @@ export function FeaturedProducts() {
             >
               <Sparkles className="w-3.5 h-3.5 text-primary" />
               <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                Έπιπλα Μπάνιου & Ειδικά Προϊόντα
+                {language === 'el' ? 'Έπιπλα Μπάνιου & Ειδικά Προϊόντα' : 'Bathroom Furniture & Special Products'}
               </span>
             </motion.div>
             <motion.h2
@@ -38,7 +40,7 @@ export function FeaturedProducts() {
               transition={{ delay: 0.1 }}
               className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold mb-3 sm:mb-4"
             >
-              Επιλεγμένα Προϊόντα
+              {t('home.featured.title')}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -47,7 +49,7 @@ export function FeaturedProducts() {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground text-sm sm:text-base"
             >
-              Υψηλή αισθητική, ποιότητα και σύγχρονη τεχνολογία
+              {language === 'el' ? 'Υψηλή αισθητική, ποιότητα και σύγχρονη τεχνολογία' : 'High aesthetics, quality and modern technology'}
             </motion.p>
           </div>
           
@@ -60,8 +62,8 @@ export function FeaturedProducts() {
           >
             <Button variant="outline" className="gap-2 group rounded-xl h-11 sm:h-12" asChild>
               <Link to="/products">
-                <span className="hidden sm:inline">Όλα τα Προϊόντα</span>
-                <span className="sm:hidden">Όλα</span>
+                <span className="hidden sm:inline">{t('category.all')}</span>
+                <span className="sm:hidden">{language === 'el' ? 'Όλα' : 'All'}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>

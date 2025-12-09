@@ -11,10 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ProductsPage() {
   const { data: products = [], isLoading } = useProductsQuery();
   const { data: categories = [] } = useCategoriesQuery();
+  const { language, t } = useLanguage();
   
   // Filter states
   const [search, setSearch] = useState('');
@@ -50,7 +52,6 @@ export default function ProductsPage() {
 
     // Category filter (using tags)
     if (selectedCategories.length > 0) {
-      // If "all" is selected, show all products
       if (!selectedCategories.includes('all')) {
         result = result.filter((p) => 
           p.tags?.some((tag) => selectedCategories.includes(tag))
@@ -150,10 +151,12 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title>Προϊόντα | PROBAGNO - Έπιπλα Μπάνιου</title>
+        <title>{language === 'el' ? 'Προϊόντα | PROBAGNO - Έπιπλα Μπάνιου' : 'Products | PROBAGNO - Bathroom Furniture'}</title>
         <meta
           name="description"
-          content="Εξερευνήστε την πλήρη συλλογή επίπλων μπάνιου PROBAGNO. Νιπτήρες, καθρέπτες, ντουλάπια και αξεσουάρ υψηλής ποιότητας."
+          content={language === 'el' 
+            ? 'Εξερευνήστε την πλήρη συλλογή επίπλων μπάνιου PROBAGNO. Νιπτήρες, καθρέπτες, ντουλάπια και αξεσουάρ υψηλής ποιότητας.'
+            : 'Explore the complete PROBAGNO bathroom furniture collection. High-quality sinks, mirrors, cabinets and accessories.'}
         />
       </Helmet>
       <Layout>
@@ -166,10 +169,12 @@ export default function ProductsPage() {
               className="text-center max-w-2xl mx-auto"
             >
               <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold mb-3 sm:mb-4">
-                Τα Προϊόντα μας
+                {language === 'el' ? 'Τα Προϊόντα μας' : 'Our Products'}
               </h1>
               <p className="text-muted-foreground text-sm sm:text-base">
-                Ανακαλύψτε τη συλλογή μας από επιλεγμένα έπιπλα μπάνιου υψηλής αισθητικής
+                {language === 'el' 
+                  ? 'Ανακαλύψτε τη συλλογή μας από επιλεγμένα έπιπλα μπάνιου υψηλής αισθητικής'
+                  : 'Discover our collection of high-aesthetic bathroom furniture'}
               </p>
             </motion.div>
           </div>
@@ -192,7 +197,7 @@ export default function ProductsPage() {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Αναζήτηση προϊόντων..."
+                    placeholder={language === 'el' ? 'Αναζήτηση προϊόντων...' : 'Search products...'}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="pl-11 h-11 sm:h-12 rounded-xl text-base"
@@ -221,7 +226,7 @@ export default function ProductsPage() {
                         className="lg:hidden gap-2 h-11 sm:h-12 rounded-xl flex-1 sm:flex-none relative"
                       >
                         <Filter className="w-4 h-4" />
-                        <span>Φίλτρα</span>
+                        <span>{t('products.filter')}</span>
                         {activeFilterCount > 0 && (
                           <Badge
                             variant="default"
@@ -236,7 +241,7 @@ export default function ProductsPage() {
                       <SheetHeader>
                         <SheetTitle className="text-left flex items-center gap-2">
                           <SlidersHorizontal className="w-5 h-5" />
-                          Φίλτρα Προϊόντων
+                          {language === 'el' ? 'Φίλτρα Προϊόντων' : 'Product Filters'}
                         </SheetTitle>
                       </SheetHeader>
                       <div className="mt-6">
@@ -263,7 +268,7 @@ export default function ProductsPage() {
                           className="w-full h-12 rounded-xl"
                           onClick={() => setMobileFiltersOpen(false)}
                         >
-                          Εμφάνιση {filteredProducts.length} Προϊόντων
+                          {language === 'el' ? `Εμφάνιση ${filteredProducts.length} Προϊόντων` : `Show ${filteredProducts.length} Products`}
                         </Button>
                       </div>
                     </SheetContent>
@@ -276,11 +281,11 @@ export default function ProductsPage() {
                       onChange={(e) => setSortBy(e.target.value)}
                       className="h-11 sm:h-12 w-full sm:w-auto px-4 pr-10 rounded-xl border border-input bg-background text-sm font-medium appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     >
-                      <option value="featured">Προτεινόμενα</option>
-                      <option value="newest">Νεότερα</option>
-                      <option value="price-asc">Τιμή ↑</option>
-                      <option value="price-desc">Τιμή ↓</option>
-                      <option value="name">Όνομα</option>
+                      <option value="featured">{language === 'el' ? 'Προτεινόμενα' : 'Featured'}</option>
+                      <option value="newest">{t('products.sort.newest')}</option>
+                      <option value="price-asc">{language === 'el' ? 'Τιμή ↑' : 'Price ↑'}</option>
+                      <option value="price-desc">{language === 'el' ? 'Τιμή ↓' : 'Price ↓'}</option>
+                      <option value="name">{t('products.sort.name')}</option>
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                   </div>
@@ -334,13 +339,13 @@ export default function ProductsPage() {
                     })}
                     {selectedColors.length > 0 && (
                       <Badge variant="secondary" className="gap-1">
-                        {selectedColors.length} χρώματα
+                        {selectedColors.length} {language === 'el' ? 'χρώματα' : 'colors'}
                         <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedColors([])} />
                       </Badge>
                     )}
                     {selectedMaterials.length > 0 && (
                       <Badge variant="secondary" className="gap-1">
-                        {selectedMaterials.length} υλικά
+                        {selectedMaterials.length} {language === 'el' ? 'υλικά' : 'materials'}
                         <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedMaterials([])} />
                       </Badge>
                     )}
@@ -356,7 +361,7 @@ export default function ProductsPage() {
                       className="h-6 px-2 text-xs"
                       onClick={clearFilters}
                     >
-                      Καθαρισμός
+                      {language === 'el' ? 'Καθαρισμός' : 'Clear'}
                     </Button>
                   </motion.div>
                 )}
@@ -395,8 +400,10 @@ export default function ProductsPage() {
                 >
                   <p className="text-sm text-muted-foreground">
                     <span className="font-semibold text-foreground">{filteredProducts.length}</span>{' '}
-                    {filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα'}
-                    {hasFilters && ' (φιλτραρισμένα)'}
+                    {language === 'el' 
+                      ? (filteredProducts.length === 1 ? 'προϊόν' : 'προϊόντα')
+                      : (filteredProducts.length === 1 ? 'product' : 'products')}
+                    {hasFilters && (language === 'el' ? ' (φιλτραρισμένα)' : ' (filtered)')}
                   </p>
                 </motion.div>
 
@@ -413,25 +420,30 @@ export default function ProductsPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-center py-16 sm:py-20"
+                    className="text-center py-16"
                   >
-                    <div className="w-16 h-16 mx-auto rounded-2xl bg-muted flex items-center justify-center mb-4">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
                       <Search className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <h3 className="font-semibold text-lg mb-2">Δεν βρέθηκαν προϊόντα</h3>
-                    <p className="text-muted-foreground mb-6 text-sm sm:text-base max-w-md mx-auto">
-                      Δεν υπάρχουν προϊόντα που να ταιριάζουν με τα επιλεγμένα φίλτρα. Δοκιμάστε να
-                      αλλάξετε τα κριτήρια αναζήτησης.
+                    <h3 className="font-display text-xl font-semibold mb-2">
+                      {t('products.no_results')}
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      {language === 'el' 
+                        ? 'Δοκιμάστε να αλλάξετε τα φίλτρα σας'
+                        : 'Try changing your filters'}
                     </p>
-                    <Button onClick={clearFilters} className="rounded-xl h-11">
-                      Καθαρισμός Φίλτρων
+                    <Button variant="outline" onClick={clearFilters}>
+                      {t('products.clear_filters')}
                     </Button>
                   </motion.div>
                 ) : (
                   <div
                     className={cn(
                       'grid gap-4 sm:gap-6',
-                      gridCols === 2 ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-3'
+                      gridCols === 2
+                        ? 'grid-cols-2'
+                        : 'grid-cols-2 lg:grid-cols-3'
                     )}
                   >
                     {filteredProducts.map((product, index) => (
