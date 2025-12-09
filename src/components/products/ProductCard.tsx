@@ -5,7 +5,7 @@ import { ShoppingBag, Eye, Heart } from 'lucide-react';
 import { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/cartStore';
-import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +13,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
+  const { t, language } = useLanguage();
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const { addItem } = useCartStore();
@@ -20,6 +21,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const defaultDimension = product.dimensions[0];
   const displayPrice = product.salePrice || product.basePrice;
   const hasDiscount = product.salePrice && product.salePrice < product.basePrice;
+
+  // Get product name based on language
+  const productName = language === 'en' && product.nameEn ? product.nameEn : product.name;
 
   // 3D tilt effect
   const x = useMotionValue(0);
@@ -50,6 +54,14 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     }
   };
 
+  const getCategoryName = (category: string) => {
+    if (category === 'vanities') return t('category.vanities');
+    if (category === 'mirrors') return t('category.mirrors');
+    if (category === 'cabinets') return t('category.cabinets');
+    if (category === 'accessories') return language === 'el' ? 'Αξεσουάρ' : 'Accessories';
+    return category;
+  };
+
   return (
     <motion.div
       ref={cardRef}
@@ -68,7 +80,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted mb-4 shadow-sm group-hover:shadow-xl transition-shadow duration-500">
           <motion.img
             src={primaryImage?.url}
-            alt={primaryImage?.alt || product.name}
+            alt={primaryImage?.alt || productName}
             className="w-full h-full object-cover"
             animate={{ scale: isHovered ? 1.08 : 1 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -129,7 +141,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               onClick={handleQuickAdd}
             >
               <ShoppingBag className="w-4 h-4" />
-              Προσθήκη
+              {language === 'el' ? 'Προσθήκη' : 'Add'}
             </Button>
             <Button size="sm" variant="secondary" className="px-3 rounded-xl h-11 shadow-lg bg-background/90 backdrop-blur-sm">
               <Eye className="w-4 h-4" />
@@ -151,13 +163,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         {/* Content */}
         <div className="space-y-2 px-1">
           <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-medium">
-            {product.category === 'vanities' && 'Έπιπλα Μπάνιου'}
-            {product.category === 'mirrors' && 'Καθρέπτες'}
-            {product.category === 'cabinets' && 'Ντουλάπια'}
-            {product.category === 'accessories' && 'Αξεσουάρ'}
+            {getCategoryName(product.category)}
           </p>
           <h3 className="font-display text-base sm:text-lg font-medium group-hover:text-primary transition-colors line-clamp-2">
-            {product.name}
+            {productName}
           </h3>
           <div className="flex items-baseline gap-2 flex-wrap">
             <span className="font-semibold text-lg sm:text-xl">€{displayPrice.toLocaleString()}</span>
@@ -169,7 +178,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
           {product.dimensions.length > 1 && (
             <p className="text-[10px] sm:text-xs text-muted-foreground">
-              {product.dimensions.length} διαστάσεις διαθέσιμες
+              {product.dimensions.length} {language === 'el' ? 'διαστάσεις διαθέσιμες' : 'sizes available'}
             </p>
           )}
         </div>

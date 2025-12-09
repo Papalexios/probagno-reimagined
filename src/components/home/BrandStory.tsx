@@ -1,7 +1,9 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function BrandStory() {
+  const { language } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -11,10 +13,14 @@ export function BrandStory() {
   const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const statsY = useTransform(scrollYProgress, [0, 1], ['20%', '-20%']);
 
-  const values = [
+  const values = language === 'el' ? [
     { num: '1', title: 'Σεβασμός', subtitle: 'στον πελάτη' },
     { num: '2', title: 'Ποιότητα', subtitle: 'εργασίας' },
     { num: '3', title: 'Τεχνολογική', subtitle: 'εξέλιξη' },
+  ] : [
+    { num: '1', title: 'Respect', subtitle: 'for the customer' },
+    { num: '2', title: 'Quality', subtitle: 'of work' },
+    { num: '3', title: 'Technological', subtitle: 'evolution' },
   ];
 
   return (
@@ -49,7 +55,9 @@ export function BrandStory() {
               className="absolute -bottom-6 -right-4 sm:-bottom-8 sm:-right-8 lg:-right-12 bg-primary text-primary-foreground p-5 sm:p-6 lg:p-8 rounded-2xl shadow-2xl"
             >
               <div className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold mb-1">50+</div>
-              <div className="text-xs sm:text-sm opacity-80 leading-tight">Χρόνια<br />Εμπειρίας</div>
+              <div className="text-xs sm:text-sm opacity-80 leading-tight">
+                {language === 'el' ? 'Χρόνια' : 'Years of'}<br />{language === 'el' ? 'Εμπειρίας' : 'Experience'}
+              </div>
             </motion.div>
 
             {/* Decorative Element */}
@@ -76,20 +84,23 @@ export function BrandStory() {
             </motion.div>
             
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 leading-tight">
-              Η Φιλοσοφία μας
+              {language === 'el' ? 'Η Φιλοσοφία μας' : 'Our Philosophy'}
               <br />
-              <span className="text-muted-foreground">από το 1974</span>
+              <span className="text-muted-foreground">
+                {language === 'el' ? 'από το 1974' : 'since 1974'}
+              </span>
             </h2>
 
             <div className="space-y-4 sm:space-y-6 text-muted-foreground text-sm sm:text-base leading-relaxed">
               <p>
-                Τα προϊόντα μας διακρίνονται για το φινίρισμά τους, την μοναδική τους αρμονία, 
-                την έμφαση στην λεπτομέρεια, την καινοτομία στις γραμμές και τις πρώτες ύλες 
-                που χρησιμοποιούνται.
+                {language === 'el' 
+                  ? 'Τα προϊόντα μας διακρίνονται για το φινίρισμά τους, την μοναδική τους αρμονία, την έμφαση στην λεπτομέρεια, την καινοτομία στις γραμμές και τις πρώτες ύλες που χρησιμοποιούνται.'
+                  : 'Our products are distinguished by their finish, their unique harmony, the emphasis on detail, innovation in lines and the raw materials used.'}
               </p>
               <p>
-                Η εταιρεία μας λειτουργεί έχοντας πάντα ως γνώμονα το θεμελιωτικό τρίπτυχο 
-                που συνοψίζει τη βασική φιλοσοφία του ιδρυτή της:
+                {language === 'el'
+                  ? 'Η εταιρεία μας λειτουργεί έχοντας πάντα ως γνώμονα το θεμελιωτικό τρίπτυχο που συνοψίζει τη βασική φιλοσοφία του ιδρυτή της:'
+                  : 'Our company operates always guided by the foundational triptych that summarizes the basic philosophy of its founder:'}
               </p>
             </div>
 

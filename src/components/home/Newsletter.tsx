@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Send, Sparkles } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function Newsletter() {
+  const { t, language } = useLanguage();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,7 +17,7 @@ export function Newsletter() {
     
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
-    toast.success('Ευχαριστούμε για την εγγραφή σας!');
+    toast.success(t('newsletter.success'));
     setEmail('');
     setIsLoading(false);
   };
@@ -46,7 +48,7 @@ export function Newsletter() {
             transition={{ delay: 0.1 }}
             className="font-display text-2xl sm:text-3xl md:text-4xl font-semibold mb-3 sm:mb-4"
           >
-            Εγγραφείτε στο Newsletter
+            {t('newsletter.title')}
           </motion.h2>
 
           <motion.p
@@ -56,7 +58,7 @@ export function Newsletter() {
             transition={{ delay: 0.2 }}
             className="text-primary-foreground/70 mb-6 sm:mb-8 text-sm sm:text-base px-4"
           >
-            Μάθετε πρώτοι για νέα προϊόντα, προσφορές και έμπνευση για το μπάνιο σας
+            {t('newsletter.subtitle')}
           </motion.p>
 
           <motion.form
@@ -71,7 +73,7 @@ export function Newsletter() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Το email σας"
+              placeholder={t('newsletter.placeholder')}
               required
               className="h-12 sm:h-14 rounded-xl bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:ring-primary-foreground/30 text-base"
             />
@@ -81,7 +83,7 @@ export function Newsletter() {
               variant="secondary"
               className="h-12 sm:h-14 gap-2 whitespace-nowrap rounded-xl px-6 font-semibold"
             >
-              {isLoading ? 'Εγγραφή...' : 'Εγγραφή'}
+              {isLoading ? (language === 'el' ? 'Εγγραφή...' : 'Subscribing...') : t('newsletter.button')}
               <Send className="w-4 h-4" />
             </Button>
           </motion.form>
@@ -93,7 +95,9 @@ export function Newsletter() {
             transition={{ delay: 0.4 }}
             className="text-[10px] sm:text-xs text-primary-foreground/50 mt-4 px-4"
           >
-            Με την εγγραφή σας συμφωνείτε με την Πολιτική Απορρήτου μας
+            {language === 'el' 
+              ? 'Με την εγγραφή σας συμφωνείτε με την Πολιτική Απορρήτου μας'
+              : 'By subscribing you agree to our Privacy Policy'}
           </motion.p>
         </div>
       </div>

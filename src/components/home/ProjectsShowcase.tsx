@@ -2,39 +2,42 @@ import { motion } from 'framer-motion';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 import monastirakiImg from '@/assets/projects/monastiraki-1.jpg';
 import hydraImg from '@/assets/projects/hydra-1.jpg';
 import mykonosImg from '@/assets/projects/mykonos-1.jpg';
 import lagonisiImg from '@/assets/projects/lagonisi-1.jpg';
 
-const projects = [
-  {
-    id: 1,
-    title: 'Λαγονήσι',
-    image: lagonisiImg,
-    category: 'Residential',
-  },
-  {
-    id: 2,
-    title: 'Ύδρα',
-    image: hydraImg,
-    category: 'Hotel',
-  },
-  {
-    id: 3,
-    title: 'Μύκονος',
-    image: mykonosImg,
-    category: 'Villa',
-  },
-  {
-    id: 4,
-    title: 'Μοναστηράκι',
-    image: monastirakiImg,
-    category: 'Apartment',
-  },
-];
-
 export function ProjectsShowcase() {
+  const { t, language } = useLanguage();
+
+  const projects = [
+    {
+      id: 1,
+      title: language === 'el' ? 'Λαγονήσι' : 'Lagonisi',
+      image: lagonisiImg,
+      category: language === 'el' ? 'Κατοικία' : 'Residential',
+    },
+    {
+      id: 2,
+      title: language === 'el' ? 'Ύδρα' : 'Hydra',
+      image: hydraImg,
+      category: language === 'el' ? 'Ξενοδοχείο' : 'Hotel',
+    },
+    {
+      id: 3,
+      title: language === 'el' ? 'Μύκονος' : 'Mykonos',
+      image: mykonosImg,
+      category: 'Villa',
+    },
+    {
+      id: 4,
+      title: language === 'el' ? 'Μοναστηράκι' : 'Monastiraki',
+      image: monastirakiImg,
+      category: language === 'el' ? 'Διαμέρισμα' : 'Apartment',
+    },
+  ];
+
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-muted/50 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,7 +51,7 @@ export function ProjectsShowcase() {
           >
             <MapPin className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-medium text-primary uppercase tracking-wider">
-              Σχεδιασμός & Κατασκευή
+              {language === 'el' ? 'Σχεδιασμός & Κατασκευή' : 'Design & Construction'}
             </span>
           </motion.div>
           <motion.h2
@@ -58,7 +61,7 @@ export function ProjectsShowcase() {
             transition={{ delay: 0.1 }}
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold mb-3 sm:mb-4"
           >
-            Επιλεγμένα Έργα
+            {t('projectsShowcase.title')}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -67,7 +70,7 @@ export function ProjectsShowcase() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base"
           >
-            Δείτε μερικά από τα έργα που έχουμε ολοκληρώσει σε όλη την Ελλάδα
+            {t('projectsShowcase.subtitle')}
           </motion.p>
         </div>
 
@@ -114,7 +117,7 @@ export function ProjectsShowcase() {
         >
           <Button variant="outline" size="lg" className="gap-2 group rounded-xl h-12 sm:h-14" asChild>
             <Link to="/projects">
-              Δείτε όλα τα Έργα
+              {t('projectsShowcase.viewAll')}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>
