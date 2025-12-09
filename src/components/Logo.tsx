@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 interface LogoProps {
   className?: string;
@@ -8,69 +8,77 @@ interface LogoProps {
 }
 
 export function Logo({ className = '', size = 'md', showTagline = false }: LogoProps) {
-  const sizeClasses = {
-    sm: 'text-lg sm:text-xl',
-    md: 'text-xl sm:text-2xl',
-    lg: 'text-3xl sm:text-4xl'
-  };
-
-  const iconSizes = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10 sm:w-12 sm:h-12',
-    lg: 'w-14 h-14 sm:w-16 sm:h-16'
-  };
-
-  const taglineSizes = {
-    sm: 'text-[7px] sm:text-[8px]',
-    md: 'text-[8px] sm:text-[10px]',
-    lg: 'text-xs sm:text-sm'
+  const sizes = {
+    sm: { container: 'gap-2', icon: 'w-9 h-9', text: 'text-base', tagline: 'text-[7px]', letter: 'text-sm' },
+    md: { container: 'gap-3', icon: 'w-11 h-11', text: 'text-lg', tagline: 'text-[9px]', letter: 'text-base' },
+    lg: { container: 'gap-4', icon: 'w-16 h-16', text: 'text-2xl', tagline: 'text-[11px]', letter: 'text-xl' },
   };
 
   return (
-    <Link to="/" className={`group flex items-center gap-2 sm:gap-3 ${className}`}>
-      {/* Logo Mark - Elegant Diamond with P */}
+    <Link to="/" className={`flex items-center ${sizes[size].container} group ${className}`}>
+      {/* Premium Logo Mark - Layered Geometric Design */}
       <motion.div 
-        className="relative"
-        whileHover={{ scale: 1.05, rotate: 3 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        className={`${sizes[size].icon} relative`}
+        whileHover={{ scale: 1.08, rotate: 3 }}
+        transition={{ type: "spring", stiffness: 300, damping: 15 }}
       >
-        <div className={`${iconSizes[size]} relative`}>
-          {/* Outer diamond - marble texture effect */}
-          <div className="absolute inset-0 rotate-45 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-[3px] shadow-lg">
-            {/* Inner highlight */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 rounded-[3px]" />
-          </div>
+        {/* Outer glow effect */}
+        <div className="absolute -inset-1 bg-gradient-to-br from-amber-400/30 via-primary/20 to-stone-600/30 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        {/* Main container - rounded square */}
+        <div className="absolute inset-0 bg-gradient-to-br from-stone-800 via-stone-900 to-stone-950 rounded-xl shadow-2xl overflow-hidden">
+          {/* Diagonal luxury stripe */}
+          <div className="absolute -inset-full rotate-45 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
           
-          {/* Inner diamond accent */}
-          <div className="absolute inset-[15%] rotate-45 border border-primary-foreground/40 rounded-[2px]">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-foreground/10 to-transparent rounded-[2px]" />
-          </div>
+          {/* Top accent line */}
+          <div className="absolute top-0 left-2 right-2 h-[1px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
           
-          {/* P letter - elegant serif style */}
-          <span className="absolute inset-0 flex items-center justify-center font-serif text-primary-foreground font-bold tracking-tight drop-shadow-sm"
-            style={{ fontSize: size === 'lg' ? '1.75rem' : size === 'md' ? '1.25rem' : '1rem' }}
-          >
-            P
-          </span>
+          {/* Inner elegant border */}
+          <div className="absolute inset-[3px] rounded-lg border border-amber-500/20" />
         </div>
-      </motion.div>
-
-      {/* Brand Text */}
-      <div className="flex flex-col leading-none">
+        
+        {/* Decorative corner accents */}
+        <div className="absolute top-1 left-1 w-2 h-2 border-l border-t border-amber-400/40 rounded-tl" />
+        <div className="absolute bottom-1 right-1 w-2 h-2 border-r border-b border-amber-400/40 rounded-br" />
+        
+        {/* Letter P - Elegant serif with gradient */}
         <motion.span 
-          className={`font-serif font-semibold tracking-[0.08em] ${sizeClasses[size]}`}
-          whileHover={{ letterSpacing: '0.12em' }}
-          transition={{ duration: 0.3 }}
+          className={`absolute inset-0 flex items-center justify-center font-serif ${sizes[size].letter} font-bold`}
+          style={{
+            background: 'linear-gradient(135deg, #f5f5f4 0%, #d6d3d1 50%, #a8a29e 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          }}
         >
-          <span className="text-primary">PRO</span>
-          <span className="text-foreground">BAGNO</span>
+          P
         </motion.span>
+      </motion.div>
+      
+      {/* Brand Name - Premium Typography */}
+      <div className="flex flex-col">
+        <motion.div className="relative overflow-hidden">
+          <motion.span 
+            className={`font-display ${sizes[size].text} font-semibold tracking-[0.25em] bg-gradient-to-r from-stone-800 via-stone-700 to-stone-600 dark:from-stone-100 dark:via-stone-200 dark:to-stone-300 bg-clip-text text-transparent`}
+            whileHover={{ letterSpacing: '0.3em' }}
+            transition={{ duration: 0.4 }}
+          >
+            PROBAGNO
+          </motion.span>
+          {/* Underline accent on hover */}
+          <motion.div 
+            className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500"
+            initial={{ width: 0 }}
+            whileHover={{ width: '100%' }}
+            transition={{ duration: 0.4 }}
+          />
+        </motion.div>
         {showTagline && (
           <motion.span 
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className={`${taglineSizes[size]} tracking-[0.25em] text-muted-foreground uppercase mt-0.5 font-light`}
+            className={`${sizes[size].tagline} tracking-[0.4em] text-stone-500 dark:text-stone-400 uppercase mt-0.5 font-light`}
+            initial={{ opacity: 0.7 }}
+            whileHover={{ opacity: 1, letterSpacing: '0.45em' }}
+            transition={{ duration: 0.3 }}
           >
             Depuis 1974
           </motion.span>
@@ -79,3 +87,5 @@ export function Logo({ className = '', size = 'md', showTagline = false }: LogoP
     </Link>
   );
 }
+
+export default Logo;

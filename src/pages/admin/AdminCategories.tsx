@@ -23,13 +23,13 @@ export default function AdminCategories() {
   // Use Supabase data for accurate counts
   const { data: dbProducts = [] } = useProductsQuery();
   const { data: dbCategories = [] } = useCategoriesQuery();
-  const { categories, addCategory, updateCategory, deleteCategory } = useProductStore();
+  const { addCategory, updateCategory, deleteCategory } = useProductStore();
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const getProductCount = (slug: string) => {
-    // Use tags from Supabase data for accurate category counting
+  // Build categories with accurate counts from Supabase data
+  const categoriesWithCounts = dbCategories.map(cat => {
     const tagMap: Record<string, string> = {
       'led-mirrors': 'Καθρέπτης LED',
       'mirror-cabinets': 'Καθρέπτης με ντουλάπι',
@@ -37,20 +37,26 @@ export default function AdminCategories() {
       'metal-bases': 'Μεταλλική βάση',
       'cabinets': 'Ντουλάπι',
       'drawers': 'Συρτάρι',
-      'all': 'all'
     };
     
-    const tagToMatch = tagMap[slug];
-    
-    if (slug === 'all') {
-      return dbProducts.length;
+    let count = 0;
+    if (cat.slug === 'all') {
+      count = dbProducts.length;
+    } else {
+      const tagToMatch = tagMap[cat.slug];
+      if (tagToMatch) {
+        count = dbProducts.filter(p => p.tags?.includes(tagToMatch)).length;
+      } else {
+        count = dbProducts.filter(p => p.category === cat.slug).length;
+      }
     }
     
-    if (!tagToMatch) {
-      return dbProducts.filter(p => p.category === slug).length;
-    }
-    
-    return dbProducts.filter(p => p.tags?.includes(tagToMatch)).length;
+    return { ...cat, productCount: count };
+  });
+
+  const getProductCount = (slug: string) => {
+    const found = categoriesWithCounts.find(c => c.slug === slug);
+    return found?.productCount || 0;
   };
 
   const handleSave = (category: Category) => {
@@ -66,8 +72,8 @@ export default function AdminCategories() {
   };
 
   const handleDelete = (id: string) => {
-    const category = categories.find(c => c.id === id);
-    const count = category ? getProductCount(category.slug) : 0;
+    const category = categoriesWithCounts.find(c => c.id === id);
+    const count = category ? category.productCount : 0;
     if (count > 0) {
       toast.error(`Δεν μπορείτε να διαγράψετε κατηγορία με ${count} προϊόντα`);
       setDeleteConfirm(null);
@@ -85,7 +91,7 @@ export default function AdminCategories() {
         <div>
           <h1 className="font-display text-3xl font-semibold">Κατηγορίες</h1>
           <p className="text-muted-foreground mt-1">
-            Διαχειριστείτε τις κατηγορίες προϊόντων ({categories.length} κατηγορίες)
+            Διαχειριστείτε τις κατηγορίες προϊόντων ({categoriesWithCounts.length} κατηγορίες)
           </p>
         </div>
         <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
@@ -96,7 +102,7 @@ export default function AdminCategories() {
 
       {/* Categories Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category, index) => (
+        {categoriesWithCounts.map((category, index) => (
           <motion.div
             key={category.id}
             initial={{ opacity: 0, y: 20 }}
